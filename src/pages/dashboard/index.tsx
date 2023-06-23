@@ -1,13 +1,31 @@
+import { GetServerSideProps } from 'next'
+import {getSession} from 'next-auth/react'
+import { redirect } from 'next/dist/server/api-utils'
+import { ChangeEvent, FormEvent, useState } from 'react'
 import {FiShare2} from 'react-icons/fi'
 import {FaTrash} from 'react-icons/fa'
-import { GetServerSideProps } from 'next'
 import styles from './styles.module.css'
 import Head from 'next/head'
 import {Textarea} from '../../components/textarea'
-import {getSession} from 'next-auth/react'
-import { redirect } from 'next/dist/server/api-utils'
 
 export default function Dashboard () {
+
+    const [input, setInput] = useState("")
+    const [publicTask, setPublicTask] = useState(false)
+
+    function handleChangePublic(event:ChangeEvent<HTMLInputElement>){
+        console.log(event.target.checked)
+        setPublicTask(event.target.checked)
+    }
+
+    function handleRegisterTask(event: FormEvent){
+        event.preventDefault()
+
+        if(input === "") return(
+            alert("teste")
+        )
+    }
+
     return(
         <div className={styles.container}>
             <Head>
@@ -19,16 +37,25 @@ export default function Dashboard () {
                     <div className={styles.contentForm}>
                         <h1 className={styles.title}>Qual sua tarefa?</h1>
                 
-                        <form>
+                        <form onSubmit={handleRegisterTask}>
                             <Textarea
                                 placeholder='Digite qual sua tarefa...'
+                                value={input}
+                                onChange={(event:ChangeEvent<HTMLTextAreaElement>)=> setInput(event.target.value)}
                             />
                             <div className={styles.checkboxArea}>
-                                <input type="checkbox" className={styles.checkbox}/>
+                                <input 
+                                    type="checkbox" className={styles.checkbox}
+                                    checked={publicTask}
+                                    onChange={handleChangePublic}
+                                />
                                 <label>Deixar tarefa pública?</label>
                             </div>
 
-                            <button className={styles.button} type="submit">
+                            <button 
+                                className={styles.button}
+                                type="submit"
+                            >
                                 Registrar
                             </button>
                         </form>
