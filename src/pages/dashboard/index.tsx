@@ -4,11 +4,20 @@ import { redirect } from 'next/dist/server/api-utils'
 import { ChangeEvent, FormEvent, useState } from 'react'
 import {FiShare2} from 'react-icons/fi'
 import {FaTrash} from 'react-icons/fa'
-import styles from './styles.module.css'
 import Head from 'next/head'
+import styles from './styles.module.css'
 import {Textarea} from '../../components/textarea'
 
-export default function Dashboard () {
+import {db} from '../../services/firebaseConnections'
+import {addDoc, collection} from 'firebase/firestore'
+
+interface HomeProps{
+    user:{ 
+        email: string;
+    }
+}
+
+export default function Dashboard ({user}: HomeProps) {
 
     const [input, setInput] = useState("")
     const [publicTask, setPublicTask] = useState(false)
@@ -18,12 +27,25 @@ export default function Dashboard () {
         setPublicTask(event.target.checked)
     }
 
-    function handleRegisterTask(event: FormEvent){
+    async function handleRegisterTask(event: FormEvent){
         event.preventDefault()
 
-        if(input === "") return(
-            alert("teste")
-        )
+        if(input === "") return;
+
+        try{
+            await addDoc(collection(db, "tarefas"),{
+                tarefa: input,
+                created: new Date(),
+                user: user?.email,
+                public: publicTask,
+            })
+
+            setInput("")
+            setPublicTask(false)
+
+        }catch(err){
+            console.log(err)
+        }
     }
 
     return(
@@ -108,6 +130,10 @@ export const getServerSideProps: GetServerSideProps = async ({req})=> {
     }
 
     return{
-        props: {},
+        props: {
+            user: {
+                email: session?.user?.email,
+            }
+        },
     }
 }
