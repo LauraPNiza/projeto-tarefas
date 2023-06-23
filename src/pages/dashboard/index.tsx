@@ -1,3 +1,5 @@
+import {FiShare2} from 'react-icons/fi'
+import {FaTrash} from 'react-icons/fa'
 import { GetServerSideProps } from 'next'
 import styles from './styles.module.css'
 import Head from 'next/head'
@@ -32,6 +34,33 @@ export default function Dashboard () {
                         </form>
                     </div>
                 </section>
+
+                <section className={styles.taskContainer}>
+                    <h1>Minhas tarefas</h1>
+
+                    <article className={styles.task}>
+                        <div className={styles.tagContainer}>
+                            <label className={styles.tag}>PUBLIC</label>
+                            <button className={styles.shareButton}>
+                                <FiShare2
+                                    size={22}
+                                    color='#3183FF'
+                                />
+                            </button>
+                        </div>
+
+                        <div className={styles.taskContent}>
+                            <p>Minha primeira tarefa</p>
+                            <button className={styles.trashButton}>
+                                <FaTrash
+                                    size={24}
+                                    color='#EA3140'
+                                />
+                            </button>
+                        </div>
+                    </article>
+                </section>
+
             </main>
 
         </div>
