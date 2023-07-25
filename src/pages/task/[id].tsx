@@ -28,13 +28,11 @@ interface TaskProps{
 }
 
 interface CommentProps{
-    item:{
         id: string
         comment: string
         taskId: string
         user: string
         name: string
-    }
 }
 
 export default function Task({item, allComments}: TaskProps){
@@ -109,10 +107,10 @@ export default function Task({item, allComments}: TaskProps){
 
                 {comments.map((item) => (
                     <article 
-                        key={item.id}  
+                        key={item.id}
                         className={styles.comment}
                     >
-                        <p>item.comment</p>
+                        <p>{item.comment}</p>
                     </article>
                 ))}
             </section>
