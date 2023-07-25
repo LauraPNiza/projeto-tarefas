@@ -5,6 +5,8 @@ import Head from 'next/head'
 
 import styles from './styles.module.css'
 import {Textarea} from '../../components/textarea'
+import {FaTrash} from 'react-icons/fa'
+
 import {db} from '../../services/firebaseConnections'
 import {
     doc,
@@ -57,6 +59,15 @@ export default function Task({item, allComments}: TaskProps){
                 taskId: item?.taskId,
             })
 
+            const data = {
+                id: docRef.id,
+                comment: input,
+                user: session?.user?.email,
+                name: session?.user?.name,
+                takId: item?.taskId,
+            }
+
+            setComments((oldItems) => [...oldItems, data])
             setInput("")
 
         } catch (err){
@@ -110,6 +121,17 @@ export default function Task({item, allComments}: TaskProps){
                         key={item.id}
                         className={styles.comment}
                     >
+                        <div className={styles.headComment}>
+                            <label className={styles.commentsLabel}>{item.name}</label>
+                            {item.user === session?.user?.email && (
+                                <button className={styles.buttonTrash}>
+                                    <FaTrash
+                                        size={18}
+                                        color='#EA3140'
+                                    />
+                                </button>
+                            )}
+                        </div>
                         <p>{item.comment}</p>
                     </article>
                 ))}
